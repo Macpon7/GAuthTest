@@ -4,10 +4,12 @@ import (
     "context"
     "crypto/rand"
     "encoding/base64"
+    "encoding/json"
     "fmt"
-    "io/ioutil"
     "net/http"
     "time"
+
+    "github.com/pkg/errors"
 )
 
 const oauthGoogleUrlAPI = "https://www.googleapis.com/oauth2/v2/userinfo?access_token="
@@ -25,21 +27,27 @@ func generateStateOauthCookie(w http.ResponseWriter) string {
     return state
 }
 
-func getUserDataFromGoogle(code string) ([]byte, error) {
+func getUserDataFromGoogle(code string) (userInfo, error) {
     // Use code to get token and get user info from Google.
+    var tempUser userInfo
 
     token, err := googleOauthConfig.Exchange(context.Background(), code)
     if err != nil {
-        return nil, fmt.Errorf("code exchange wrong: %s", err.Error())
+        fmt.Println("Code exchange failed: " + err.Error())
+        return tempUser, errors.New("Code exchange failed")
     }
     response, err := http.Get(oauthGoogleUrlAPI + token.AccessToken)
     if err != nil {
-        return nil, fmt.Errorf("failed getting user info: %s", err.Error())
+        fmt.Println("Failed getting user info: " + err.Error())
+        return tempUser, errors.New("Failed getting user info")
     }
     defer response.Body.Close()
-    contents, err := ioutil.ReadAll(response.Body)
+
+    err = json.NewDecoder(response.Body).Decode(&tempUser)
     if err != nil {
-        return nil, fmt.Errorf("failed read response: %s", err.Error())
+        fmt.Println("Failed decoding user info from google: " + err.Error())
+        return tempUser, errors.New("Failed decoding user info from google")
     }
-    return contents, nil
+
+    return tempUser, nil
 }

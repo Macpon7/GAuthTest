@@ -1,7 +1,6 @@
 package internal
 
 import (
-    "fmt"
     "log"
     "net/http"
 )
@@ -16,15 +15,14 @@ func OathCallBackHandler(w http.ResponseWriter, r *http.Request) {
         return
     }
 
-    data, err := getUserDataFromGoogle(r.FormValue("code"))
+    tempUser, err := getUserDataFromGoogle(r.FormValue("code"))
     if err != nil {
         log.Println(err.Error())
         http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
         return
     }
 
-    // GetOrCreate User in your db.
-    // Redirect or response with a token.
-    // More code .....
-    fmt.Fprintf(w, "UserInfo: %s\n", data)
+    dbSave(tempUser)
+
+    dbPrintAll(w)
 }
