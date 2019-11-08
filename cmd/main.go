@@ -10,11 +10,6 @@ import (
 )
 
 func main() {
-    err := internal.AuthConfigInit()
-    if err != nil {
-        log.Fatalln(err.Error())
-    }
-
     port := os.Getenv("PORT")
     if port == "" {
         port = "8080"
