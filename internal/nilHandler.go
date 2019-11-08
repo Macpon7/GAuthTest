@@ -6,5 +6,5 @@ import (
 )
 
 func NilHandler (w http.ResponseWriter, r *http.Request) {
-    fmt.Println("This is the default handler")
+    fmt.Fprint(w, "This is the default handler")
 }
