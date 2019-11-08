@@ -1,1 +1,1 @@
-web: bin/GAuthTest
+web: go run main.go
