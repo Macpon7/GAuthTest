@@ -1,4 +1,4 @@
-module GAuthTest
+module github.com/Macpon7/GAuthTest
 
 go 1.13
 

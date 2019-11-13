@@ -19,6 +19,6 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 
     // Create oauthState cookie
     oauthState := generateStateOauthCookie(w)
-    u := googleOauthConfig.AuthCodeURL(oauthState)
-    http.Redirect(w, r, u, http.StatusTemporaryRedirect)
+    authURL := googleOauthConfig.AuthCodeURL(oauthState)
+    http.Redirect(w, r, authURL, http.StatusTemporaryRedirect)
 }

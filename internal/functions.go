@@ -5,7 +5,7 @@ import (
     "crypto/rand"
     "encoding/base64"
     "encoding/json"
-    "fmt"
+    "log"
     "net/http"
     "time"
 
@@ -33,19 +33,19 @@ func getUserDataFromGoogle(code string) (userInfo, error) {
 
     token, err := googleOauthConfig.Exchange(context.Background(), code)
     if err != nil {
-        fmt.Println("Code exchange failed: " + err.Error())
+        log.Println("Code exchange failed: " + err.Error())
         return tempUser, errors.New("Code exchange failed")
     }
     response, err := http.Get(oauthGoogleUrlAPI + token.AccessToken)
     if err != nil {
-        fmt.Println("Failed getting user info: " + err.Error())
+        log.Println("Failed getting user info: " + err.Error())
         return tempUser, errors.New("Failed getting user info")
     }
     defer response.Body.Close()
 
     err = json.NewDecoder(response.Body).Decode(&tempUser)
     if err != nil {
-        fmt.Println("Failed decoding user info from google: " + err.Error())
+        log.Println("Failed decoding user info from google: " + err.Error())
         return tempUser, errors.New("Failed decoding user info from google")
     }
 

@@ -6,7 +6,7 @@ import (
     "net/http"
     "os"
 
-    "GAuthTest/internal"
+    "github.com/Macpon7/GAuthTest/internal"
 )
 
 func main() {
